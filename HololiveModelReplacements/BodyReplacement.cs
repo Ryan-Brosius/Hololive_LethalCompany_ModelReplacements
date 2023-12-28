@@ -3,63 +3,75 @@ using UnityEngine;
 
 namespace HololiveModelAdditions.Replacements
 {
-    public class EmiliaReplacement : BodyReplacementBase
+    public class KiaraReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "emiliaPrefab";
+            string model_name = "kiaraPrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
 
-    public class BeatriceReplacement : BodyReplacementBase
+    public class BotanReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "beatricePrefab";
+            string model_name = "botanPrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
 
-    public class FelixReplacement : BodyReplacementBase
+    public class GuraReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "felixPrefab";
+            string model_name = "guraPrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
 
-    public class RamReplacement : BodyReplacementBase
+    public class LamyReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "ramPrefab";
+            string model_name = "lamyPrefabFix";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
 
-    public class RemReplacement : BodyReplacementBase
+    public class OkayuReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "remPrefab";
+            string model_name = "okayuPrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
 
-    public class SubaruReplacement : BodyReplacementBase
+    public class WatameReplacement : BodyReplacementBase
     {
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "subaruPrefab";
+            string model_name = "watamePrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
+
+    public class PekoraReplacement : BodyReplacementBase
+    {
+        protected override GameObject LoadAssetsAndReturnModel()
+        {
+            //Replace with the Asset Name from your unity project 
+            string model_name = "pekoraPrefab";
+            return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
+        }
+    }
+
+
 }

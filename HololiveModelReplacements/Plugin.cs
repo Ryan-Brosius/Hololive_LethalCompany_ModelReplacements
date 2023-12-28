@@ -12,7 +12,7 @@ using HololiveModelAdditions.Replacements;
 namespace HololiveModelAdditions
 {
 
-    [BepInPlugin("tacocat.HololiveModels", "Hololive Company", "1.0.0")]
+    [BepInPlugin("tacocat.HololiveModels", "Hololive Company", "0.1.0")]
     [BepInDependency("meow.ModelReplacementAPI", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
@@ -30,24 +30,33 @@ namespace HololiveModelAdditions
             Assets.PopulateAssets();
 
             // Plugin startup logic
+            // Takes around a minute to load assets for user
+            Logger.LogInfo($"PLEASE READ, {"tacocat.HololiveModels"}  IS NOT HANGING, TAKES AROUND 50 SECONDS FOR ALL HOLOLIVE ASSETS TO LOAD");
+
+            Logger.LogInfo("Loading Kiara");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Kiara", typeof(KiaraReplacement));
+
+            Logger.LogInfo("Loading Botan");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Botan", typeof(BotanReplacement));
+
+            Logger.LogInfo("Loading Gura");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Gura", typeof(GuraReplacement));
+
+            //Lamy is broken at the moment
+            //ModelReplacementAPI.RegisterSuitModelReplacement("Lamy", typeof(LamyReplacement));
+
+            Logger.LogInfo("Loading Okayu");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Okayu", typeof(OkayuReplacement));
+
+            Logger.LogInfo("Loading Watame");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Watame", typeof(WatameReplacement));
+
+            Logger.LogInfo("Loading Pekora");
+            ModelReplacementAPI.RegisterSuitModelReplacement("Pekora", typeof(PekoraReplacement));
 
 
-            ModelReplacementAPI.RegisterSuitModelReplacement("Emilia", typeof(EmiliaReplacement));
-
-            ModelReplacementAPI.RegisterSuitModelReplacement("Beatrice", typeof(BeatriceReplacement));
-
-            ModelReplacementAPI.RegisterSuitModelReplacement("Felix", typeof(FelixReplacement));
-
-            ModelReplacementAPI.RegisterSuitModelReplacement("Rem", typeof(RemReplacement));
-
-            ModelReplacementAPI.RegisterSuitModelReplacement("Ram", typeof(RamReplacement));
-
-            ModelReplacementAPI.RegisterSuitModelReplacement("Subaru", typeof(SubaruReplacement));
-
-
-            Harmony harmony = new Harmony("meow.MikuModelReplacement");
+            Harmony harmony = new Harmony("tacocat.HololiveModels");
             harmony.PatchAll();
-            Logger.LogInfo($"Plugin {"meow.MikuModelReplacement"} is loaded!");
         }
     }
     public static class Assets
