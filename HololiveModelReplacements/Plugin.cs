@@ -31,7 +31,7 @@ namespace HololiveModelAdditions
 
             // Plugin startup logic
             // Takes around a minute to load assets for user
-            Logger.LogInfo($"PLEASE READ, {"tacocat.HololiveModels"}  IS NOT HANGING, TAKES AROUND 50 SECONDS FOR ALL HOLOLIVE ASSETS TO LOAD");
+            //Logger.LogInfo($"PLEASE READ, {"tacocat.HololiveModels"}  IS NOT HANGING, TAKES AROUND 10 SECONDS FOR ALL HOLOLIVE ASSETS TO LOAD");
 
             Logger.LogInfo("Loading Kiara");
             ModelReplacementAPI.RegisterSuitModelReplacement("Kiara", typeof(KiaraReplacement));

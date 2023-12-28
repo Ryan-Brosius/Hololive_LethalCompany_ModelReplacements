@@ -1,5 +1,6 @@
 ﻿using _3rdPerson.Helper;
 using GameNetcodeStuff;
+using Steamworks;
 using LCThirdPerson;
 using ModelReplacement;
 using MoreCompany.Cosmetics;
@@ -47,6 +48,7 @@ namespace ModelReplacement
         private MeshRenderer nameTagObj2 = null;
         private int danceNumber = 0;
         private int previousDanceNumber = 0;
+        protected bool DontConvertUnsupportedShaders = false;
 
         //Mod Support components
         private AvatarUpdater cosmeticAvatar = null;
@@ -60,7 +62,6 @@ namespace ModelReplacement
         /// </summary>
         /// <returns>Model replacement GameObject</returns>
         protected abstract GameObject LoadAssetsAndReturnModel();
-
 
         /// <summary>
         /// AssetBundles do not supply scripts that are not supported by the base game. Override to set custom scripts. 
@@ -83,7 +84,7 @@ namespace ModelReplacement
             Console.WriteLine($"PLAYER HIT ENEMY {controller.playerUsername}");
         }
 
-        protected internal virtual void OnHitAlly(PlayerControllerB ally,  bool dead)
+        protected internal virtual void OnHitAlly(PlayerControllerB ally, bool dead)
         {
             Console.WriteLine($"PLAYER HIT ALLY {controller.playerUsername}");
         }
@@ -118,18 +119,18 @@ namespace ModelReplacement
 
         protected virtual void Awake()
         {
-            
+
             controller = base.GetComponent<PlayerControllerB>();
             ModelReplacementAPI.Instance.Logger.LogInfo($"Awake {controller.playerUsername}");
 
             // Load model
             replacementModel = LoadAssetsAndReturnModel();
 
-            if(replacementModel == null)
+            if (replacementModel == null)
             {
                 ModelReplacementAPI.Instance.Logger.LogFatal("LoadAssetsAndReturnModel() returned null. Verify that your assetbundle works and your asset name is correct. ");
             }
-            
+
 
             // Fix Materials
             Renderer[] renderers = replacementModel.GetComponentsInChildren<Renderer>();
@@ -139,7 +140,7 @@ namespace ModelReplacement
             List<Material> materials = ListPool<Material>.Get();
             foreach (Renderer renderer in renderers)
             {
-                
+
                 renderer.GetSharedMaterials(materials);
                 for (int i = 0; i < materials.Count; i++)
                 {
@@ -157,8 +158,8 @@ namespace ModelReplacement
             foreach (var item in replacementModel.GetComponentsInChildren<SkinnedMeshRenderer>())
             {
                 item.updateWhenOffscreen = true;
-            }       
-            
+            }
+
             try
             {
                 AddModelScripts();  // Set scripts missing from assetBundle
@@ -167,7 +168,7 @@ namespace ModelReplacement
             {
                 ModelReplacementAPI.Instance.Logger.LogError($"Could not set all model scripts.\n Error: {e.Message}");
             }
-            
+
 
             // Instantiate model
             replacementModel = UnityEngine.Object.Instantiate<GameObject>(replacementModel);
@@ -212,7 +213,8 @@ namespace ModelReplacement
             // Local/Nonlocal renderer logic
             if (!renderLocalDebug)
             {
-                if (RenderBodyReplacement()) {
+                if (RenderBodyReplacement())
+                {
                     SetAvatarRenderers(true);
                     SetPlayerControllerRenderers(false); // Don't render original body if non-local player
                 }
@@ -257,14 +259,14 @@ namespace ModelReplacement
             avatar.Update();
             ragdollAvatar.Update();
             if (ModelReplacementAPI.moreCompanyPresent) { SafeRenderCosmetics(true); }
-            
+
 
             //Emotes
             previousDanceNumber = danceNumber;
             int danceHash = controller.playerBodyAnimator.GetCurrentAnimatorStateInfo(1).fullPathHash;
             if (controller.performingEmote)
             {
-               
+
                 if (danceHash == -462656950) { danceNumber = 1; }
                 else if (danceHash == 2103786480) { danceNumber = 2; }
                 else { danceNumber = 3; }
@@ -280,13 +282,13 @@ namespace ModelReplacement
                 Console.WriteLine($"Dance change from {previousDanceNumber} to {danceNumber}");
                 if (previousDanceNumber == 0) { StartCoroutine(WaitForDanceNumberChange()); } //Start new animation, takes time to switch to new animation state
                 else if (danceNumber == 0) { OnEmoteEnd(); } // No dance, where there was previously dance.
-                else { if(!emoteOngoing) { OnEmoteStart(danceNumber); }} //An animation did not start nor end, go immediately into the different animation
+                else { if (!emoteOngoing) { OnEmoteStart(danceNumber); } } //An animation did not start nor end, go immediately into the different animation
             }
             //Console.WriteLine($"{danceNumber} {danceHash}");
 
         }
 
-       
+
 
         protected virtual void OnDestroy()
         {
@@ -294,7 +296,7 @@ namespace ModelReplacement
             controller.thisPlayerModel.enabled = true;
             controller.thisPlayerModelLOD1.enabled = true;
             controller.thisPlayerModelLOD2.enabled = true;
-           
+
             nameTagObj.enabled = true;
             nameTagObj2.enabled = true;
 
@@ -317,6 +319,7 @@ namespace ModelReplacement
             "Toon",
             "lilToon",
             "Shader Graphs/",
+            "Hidden/"
         };
 
         /// <summary>
@@ -327,8 +330,8 @@ namespace ModelReplacement
         /// <returns>The replacement material created from the <see cref="gameMaterial"/> and the <see cref="modelMaterial"/></returns>
         protected virtual Material GetReplacementMaterial(Material gameMaterial, Material modelMaterial)
         {
-        
-            if (shaderPrefixWhitelist.Any(prefix => modelMaterial.shader.name.StartsWith(prefix)))
+
+            if (DontConvertUnsupportedShaders || shaderPrefixWhitelist.Any(prefix => modelMaterial.shader.name.StartsWith(prefix)))
             {
                 return modelMaterial;
             }
@@ -342,7 +345,7 @@ namespace ModelReplacement
                 replacementMat.mainTextureOffset = modelMaterial.mainTextureOffset;
                 replacementMat.mainTextureScale = modelMaterial.mainTextureScale;
 
-                
+
 
                 /*
             mesh.materials[0].shader = goodShader;
@@ -382,7 +385,7 @@ namespace ModelReplacement
             }
             deadBodyRenderer.enabled = false;
 
-  
+
             //blood decals not working
             foreach (var item in bodyinfo.bodyBloodDecals)
             {
@@ -460,7 +463,7 @@ namespace ModelReplacement
         private bool emoteOngoing = false;
         private IEnumerator WaitForDanceNumberChange()
         {
-            if(emoteOngoing) { yield break; }
+            if (emoteOngoing) { yield break; }
             emoteOngoing = true;
             int frame = 0;
             while (frame < 20)
@@ -469,7 +472,7 @@ namespace ModelReplacement
                 yield return new WaitForEndOfFrame();
                 frame++;
             }
-            if(danceNumber != 0) { emoteOngoing = false; OnEmoteStart(danceNumber); }
+            if (danceNumber != 0) { emoteOngoing = false; OnEmoteStart(danceNumber); }
         }
 
 
@@ -568,7 +571,7 @@ namespace ModelReplacement
                     {
                         application.RefreshAllCosmeticPositions();
                     }
-                    
+
                 }
             }
 
@@ -588,10 +591,10 @@ namespace ModelReplacement
         private int DangerousGetEmoteID(int currentID)
         {
             var anim = TooManyEmotes.Patches.PlayerPatcher.GetCurrentlyPlayingEmote(controller);
-            if(anim == null) { return currentID; }
-            if(anim.emoteId == 1) { return -1; }
-            if(anim.emoteId == 2) { return -2; }
-            if(anim.emoteId == 3) { return -3; }
+            if (anim == null) { return currentID; }
+            if (anim.emoteId == 1) { return -1; }
+            if (anim.emoteId == 2) { return -2; }
+            if (anim.emoteId == 3) { return -3; }
             return anim.emoteId;
 
         }
