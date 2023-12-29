@@ -12,7 +12,7 @@ using HololiveModelAdditions.Replacements;
 namespace HololiveModelAdditions
 {
 
-    [BepInPlugin("tacocat.HololiveModels", "Hololive Company", "0.1.0")]
+    [BepInPlugin("tacocat.HololiveModels", "Hololive Company", "1.0.0")]
     [BepInDependency("meow.ModelReplacementAPI", BepInDependency.DependencyFlags.HardDependency)]
     public class Plugin : BaseUnityPlugin
     {
@@ -43,7 +43,7 @@ namespace HololiveModelAdditions
             ModelReplacementAPI.RegisterSuitModelReplacement("Gura", typeof(GuraReplacement));
 
             //Lamy is broken at the moment
-            //ModelReplacementAPI.RegisterSuitModelReplacement("Lamy", typeof(LamyReplacement));
+            ModelReplacementAPI.RegisterSuitModelReplacement("Lamy", typeof(LamyReplacement));
 
             Logger.LogInfo("Loading Okayu");
             ModelReplacementAPI.RegisterSuitModelReplacement("Okayu", typeof(OkayuReplacement));

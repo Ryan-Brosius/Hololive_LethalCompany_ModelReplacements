@@ -38,7 +38,7 @@ namespace HololiveModelAdditions.Replacements
         protected override GameObject LoadAssetsAndReturnModel()
         {
             //Replace with the Asset Name from your unity project 
-            string model_name = "lamyPrefabFix";
+            string model_name = "lamyPrefab";
             return Assets.MainAssetBundle.LoadAsset<GameObject>(model_name);
         }
     }
