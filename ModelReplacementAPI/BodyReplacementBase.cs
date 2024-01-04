@@ -42,6 +42,7 @@ namespace ModelReplacement
         public AvatarUpdater ragdollAvatar { get; private set; }
         protected GameObject deadBody = null;
         protected GameObject replacementDeadBody = null;
+        public bool UseNoPostProcessing = false;
 
         //Misc components
         private MeshRenderer nameTagObj = null;
