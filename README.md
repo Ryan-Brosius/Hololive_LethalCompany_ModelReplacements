@@ -1,7 +1,9 @@
 A fork of the Lethal Company Model Replacement API
+
 https://github.com/BunyaPineTree/LethalCompany_ModelReplacementAPI
 
 Thunderstore Link
+
 https://thunderstore.io/c/lethal-company/p/Tacocat12/Hololive_Company/
 
 # Hololive Company (Hololive Models)
